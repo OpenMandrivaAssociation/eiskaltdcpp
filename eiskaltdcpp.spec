@@ -1,14 +1,13 @@
-%define	use_ccache	1
-%define	ccachedir	~/.ccache-OOo%{mdvsuffix}
-			%{?_with_ccache: %global use_ccache 1}%{?_without_ccache: %global use_ccache 0}
-%define			_enable_debug_packages	%{nil}
-%define			debug_package		%{nil}
-
 %define	with_qt		1
 %define	with_gtk	1
 
+# To avoid broken build in v. 2.2.2
+# (see http://code.google.com/p/eiskaltdc/issues/detail?id=1051)
+# waiting for fix from the developers in the next release
+%define	Werror_cflags	%{nil}
+
 Name:		eiskaltdcpp
-Version:	2.2.1
+Version:	2.2.2
 Release:	%mkrel 1
 License:	GPLv3+
 Summary:	Cross-platform program that uses the Direct Connect and ADC protocol
@@ -19,12 +18,13 @@ Patch0:		eiskaltdcpp-cmake-unset.patch
 Patch1:		eiskaltdcpp-qt4.4.patch
 
 # Core requirements
-BuildRequires:	boost-devel
+BuildRequires:	boost-devel >= 1.38.0
 BuildRequires:	cmake >= 2.6.0
 BuildRequires:	pcre-devel
 BuildRequires:	pkgconfig
 BuildRequires:	zlib-devel
 BuildRequires:	gettext
+BuildRequires:	idn-devel
 # Build broken with this
 #BuildRequires:	liblua5.1-devel
 # When enabling miniupnpc in the cmake command line this is needed
@@ -89,8 +89,8 @@ compatibility with other clients. This is the GTK front end.
 
 %prep
 %setup -q
-%patch0 -p0 -b .cmake_unset
-%patch1 -p0 -b .qt44
+%patch0 -p1 -b .cmake_unset
+%patch1 -p1 -b .qt44
 
 
 %build
