@@ -7,7 +7,7 @@
 %define	Werror_cflags	%{nil}
 
 Name:		eiskaltdcpp
-Version:	2.2.2
+Version:	2.2.3
 Release:	%mkrel 1
 License:	GPLv3+
 Summary:	Cross-platform program that uses the Direct Connect and ADC protocol
