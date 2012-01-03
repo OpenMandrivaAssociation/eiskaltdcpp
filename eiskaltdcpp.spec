@@ -26,9 +26,9 @@ BuildRequires:	zlib-devel
 BuildRequires:	gettext
 BuildRequires:	idn-devel
 # Build broken with this
-#BuildRequires:	liblua5.1-devel
+BuildRequires:	liblua5.1-devel
 # When enabling miniupnpc in the cmake command line this is needed
-#BuildRequires:	miniupnpc-devel
+BuildRequires:	miniupnpc-devel
 
 # Qt requirements
 %if %{with_qt}
