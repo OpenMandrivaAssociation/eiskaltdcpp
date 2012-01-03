@@ -42,7 +42,7 @@ BuildRequires:	libgnome2-devel
 BuildRequires:	pango-devel
 BuildRequires:	glib2-devel >= 2.10
 BuildRequires:	gtk2-devel >= 2.10
-BuildRequires:	libglade2-devel >= 2.4
+BuildRequires:	libglade2.0_0-devel >= 2.4
 BuildRequires:	libnotify-devel >= 0.4.1
 %endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}
