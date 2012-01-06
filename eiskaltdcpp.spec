@@ -3,7 +3,7 @@
 			%{?_with_ccache: %global use_ccache 1}%{?_without_ccache: %global use_ccache 0}
 %define			_enable_debug_packages	%{nil}
 %define			debug_package		%{nil}
-%define			distsuffix		mib
+#%define			distsuffix		mib
 
 # Now QT build requires gcc >= 4.5.0
 # so disable it on 2010.2
