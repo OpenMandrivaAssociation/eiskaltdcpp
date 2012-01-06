@@ -1,14 +1,19 @@
-%define	with_qt		1
-%define	with_gtk	1
+%define	use_ccache	1
+%define	ccachedir	~/.ccache-OOo%{mdvsuffix}
+			%{?_with_ccache: %global use_ccache 1}%{?_without_ccache: %global use_ccache 0}
+%define			_enable_debug_packages	%{nil}
+%define			debug_package		%{nil}
+%define			distsuffix		mib
 
-# To avoid broken build in v. 2.2.2
-# (see http://code.google.com/p/eiskaltdc/issues/detail?id=1051)
-# waiting for fix from the developers in the next release
-%define	Werror_cflags	%{nil}
+# Now QT build requires gcc >= 4.5.0
+# so disable it on 2010.2
+%define	with_qt		0
+%define	with_gtk		1
+
 
 Name:		eiskaltdcpp
 Version:	2.2.5
-Release:	%mkrel 2
+Release:	%mkrel 1
 License:	GPLv3+
 Summary:	Cross-platform program that uses the Direct Connect and ADC protocol
 Url:		http://code.google.com/p/eiskaltdc
@@ -19,20 +24,21 @@ Patch1:		eiskaltdcpp-qt4.4.patch
 
 # Core requirements
 BuildRequires:	boost-devel >= 1.38.0
-BuildRequires:	cmake >= 2.6.0
+BuildRequires:	cmake >= 2.6.3
 BuildRequires:	pcre-devel
+BuildRequires:	openssl-devel >= 0.9.8
 BuildRequires:	pkgconfig
 BuildRequires:	zlib-devel
 BuildRequires:	gettext
 BuildRequires:	idn-devel
-# Build broken with this
 BuildRequires:	liblua5.1-devel
 # When enabling miniupnpc in the cmake command line this is needed
-BuildRequires:	miniupnpc-devel
+#BuildRequires:	miniupnpc-devel
 
 # Qt requirements
 %if %{with_qt}
 BuildRequires:	aspell-devel
+BuildRequires:	gcc >= 4.5.0
 # For QT_QML qt4 >= 4.7.0 is needed
 BuildRequires:	qt4-devel >= 4.7.0
 %endif
@@ -40,9 +46,9 @@ BuildRequires:	qt4-devel >= 4.7.0
 %if %{with_gtk}
 BuildRequires:	libgnome2-devel
 BuildRequires:	pango-devel
-BuildRequires:	glib2-devel >= 2.10
-BuildRequires:	gtk2-devel >= 2.10
-BuildRequires:	libglade2.0_0-devel
+BuildRequires:	glib2-devel >= 2.24
+BuildRequires:	gtk2-devel >= 2.24
+BuildRequires:	libglade2-devel >= 2.4
 BuildRequires:	libnotify-devel >= 0.4.1
 %endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}
@@ -55,6 +61,7 @@ DC from Neomodus, DC++ and derivatives. EiskaltDC++ also inter operates
 with all common DC hub software. The minimum number of our patches to
 original DC++ kernel makes it easy to upgrade to new versions and ensures
 compatibility with other clients.
+
 
 %if %{with_qt}
 %package qt
@@ -70,6 +77,7 @@ with all common DC hub software. The minimum number of our patches to
 original DC++ kernel makes it easy to upgrade to new versions and ensures
 compatibility with other clients. This is the Qt front end.
 %endif
+
 
 %if %{with_gtk}
 %package gtk
@@ -89,8 +97,8 @@ compatibility with other clients. This is the GTK front end.
 
 %prep
 %setup -q
-#%patch0 -p1 -b .cmake_unset
-#%patch1 -p1 -b .qt44
+%patch0 -p1 -b .cmake_unset
+#patch1 -p1 -b .qt44
 
 
 %build
@@ -98,7 +106,8 @@ compatibility with other clients. This is the GTK front end.
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DLIB_INSTALL_DIR=%{_libdir} \
 	-DLOCAL_BOOST=OFF \
-	-DLUA_SCRIPT=OFF \
+	-DLUA_SCRIPT=ON \
+	-DUSE_IDNA=ON \
 	-DPERL_REGEX=ON \
 %if %{with_qt}
 	-DUSE_QT=ON \
@@ -107,7 +116,7 @@ compatibility with other clients. This is the GTK front end.
 	-DUSE_ASPELL=ON \
 	-DFREE_SPACE_BAR_C=ON \
 	-DDBUS_NOTIFY=ON \
-	-DUSE_QT_QML=OFF \
+	-DUSE_QT_QML=ON \
 %else
 	-DUSE_QT=OFF \
 %endif
@@ -119,13 +128,14 @@ compatibility with other clients. This is the GTK front end.
 	-DWITH_EMOTICONS=ON \
 	-DWITH_SOUNDS=ON \
 	-DWITH_EXAMPLES=ON \
-	-DWITH_LUASCRIPTS=OFF \
+	-DWITH_LUASCRIPTS=ON \
+	-DWITH_DHT=ON \
+	-DWITH_DEV_FILES=OFF \
 	-DUSE_MINIUPNP=OFF \
 	-DLOCAL_MINIUPNP=OFF \
 	-DCREATE_MO=ON \
 	-DLINGUAS="*"
 # TODO: When enabling some of the below, adjust the BReqs accordingly
-#-DLUA_SCRIPT: build still broken in 2.2.1; to enable it: ON to both LUA_SCRIPT and WITH_LUASCRIPTS
 #-DUSE_MINIUPNP: library not available in Mandriva yet; to enable it: ON to USE_MINIUPNP, OFF to LOCAL_MINIUPNP
 
 %make
@@ -145,11 +155,9 @@ rm -rf %{buildroot}/%{_datadir}/%{name}/qt/qtscripts/gnome
 
 %if %{with_gtk}
 %find_lang %{name}-gtk
-#suse_update_desktop_file %{name}-gtk
 %endif
 
 %if %{with_qt}
-#suse_update_desktop_file %{name}-qt
 find %{buildroot} -name "*.qm" | sed 's:'%{buildroot}':: 
 s:.*/\([a-zA-Z]\{2\}\).qm:%lang(\1) \0:' > %{name}-qt.lang
 %endif
@@ -177,8 +185,10 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}/sounds
 %{_datadir}/%{name}/examples
 %{_datadir}/%{name}/emoticons
+%{_datadir}/%{name}/luascripts/*
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
+
 
 %if %{with_qt}
 %files qt -f %{name}-qt.lang
@@ -193,6 +203,7 @@ rm -rf %{buildroot}
 %{_bindir}/%{name}-qt
 %endif
 
+
 %if %{with_gtk}
 %files gtk -f %{name}-gtk.lang
 %defattr(-,root,root)
@@ -203,4 +214,3 @@ rm -rf %{buildroot}
 %endif
 
 
-%changelog
