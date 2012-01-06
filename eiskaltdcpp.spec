@@ -3,17 +3,16 @@
 			%{?_with_ccache: %global use_ccache 1}%{?_without_ccache: %global use_ccache 0}
 %define			_enable_debug_packages	%{nil}
 %define			debug_package		%{nil}
-#define			distsuffix		mib
 
 # Now QT build requires gcc >= 4.5.0
 # so disable it on 2010.2
 %define	with_qt		0
-%define	with_gtk		1
+%define	with_gtk	1
 
 
 Name:		eiskaltdcpp
 Version:	2.2.5
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPLv3+
 Summary:	Cross-platform program that uses the Direct Connect and ADC protocol
 Url:		http://code.google.com/p/eiskaltdc
@@ -48,7 +47,7 @@ BuildRequires:	libgnome2-devel
 BuildRequires:	pango-devel
 BuildRequires:	glib2-devel >= 2.24
 BuildRequires:	gtk2-devel >= 2.24
-BuildRequires:	libglade2-devel >= 2.4
+BuildRequires:	libglade2.0_0-devel >= 2.4
 BuildRequires:	libnotify-devel >= 0.4.1
 %endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}
