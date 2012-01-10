@@ -1,12 +1,17 @@
-%define	use_ccache	1
-%define	ccachedir	~/.ccache-OOo%{mdvsuffix}
-			%{?_with_ccache: %global use_ccache 1}%{?_without_ccache: %global use_ccache 0}
+#define	use_ccache	1
+#define	ccachedir	~/.ccache-OOo%{mdvsuffix}
+#			%{?_with_ccache: %global use_ccache 1}%{?_without_ccache: %global use_ccache 0}
 %define			_enable_debug_packages	%{nil}
 %define			debug_package		%{nil}
 
 # Now QT build requires gcc >= 4.5.0
 # so disable it on 2010.2
-%define	with_qt		0
+%if %mdkversion >= 201100
+%define	with_qt		1
+%else
+%define with_gtk	0
+%endif
+
 %define	with_gtk	1
 
 
