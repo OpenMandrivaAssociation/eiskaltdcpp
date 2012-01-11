@@ -6,10 +6,10 @@
 
 # Now QT build requires gcc >= 4.5.0
 # so disable it on 2010.2
-%if %mdkversion >= 201100
-%define	with_qt		1
+%if %mdkversion <= 201010
+%define	with_qt		0
 %else
-%define with_gtk	0
+%define with_gtk	1
 %endif
 
 %define	with_gtk	1
