@@ -9,7 +9,7 @@
 %if %mdkversion <= 201010
 %define	with_qt		0
 %else
-%define with_gtk	1
+%define with_qt		1
 %endif
 
 %define	with_gtk	1
