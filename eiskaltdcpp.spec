@@ -42,7 +42,7 @@ BuildRequires:	liblua5.1-devel
 # Qt requirements
 %if %{with_qt}
 BuildRequires:	aspell-devel
-BuildRequires:	gcc >= 4.5.0
+BuildRequires:	gcc
 # For QT_QML qt4 >= 4.7.0 is needed
 BuildRequires:	qt4-devel >= 4.7.0
 %endif
