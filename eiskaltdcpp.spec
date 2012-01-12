@@ -6,10 +6,10 @@
 
 # Now QT build requires gcc >= 4.5.0
 # so disable it on 2010.2
-%if %mdkversion <= 201010
-%define	with_qt		0
+%if %mdkversion >= 201100
+%define	with_qt		1
 %else
-%define with_qt		1
+%define with_qt		0
 %endif
 
 %define	with_gtk	1
@@ -17,7 +17,7 @@
 
 Name:		eiskaltdcpp
 Version:	2.2.5
-Release:	%mkrel 2
+Release:	%mkrel 3
 License:	GPLv3+
 Summary:	Cross-platform program that uses the Direct Connect and ADC protocol
 Url:		http://code.google.com/p/eiskaltdc
