@@ -48,7 +48,7 @@ BuildRequires:	qt4-devel >= 4.7.0
 %endif
 # Gtk requirements
 %if %{with_gtk}
-BuildRequires:	pkgconfig(libgnome2-devel)
+BuildRequires:	libgnome2-devel
 BuildRequires:	pango-devel
 BuildRequires:	glib2-devel >= 2.24
 #BuildRequires:	pkgconfig(libgtk)
