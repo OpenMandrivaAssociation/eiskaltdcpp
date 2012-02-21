@@ -16,7 +16,7 @@
 
 
 Name:		eiskaltdcpp
-Version:	2.2.5
+Version:	2.2.6
 Release:	%mkrel 3
 License:	GPLv3+
 Summary:	Cross-platform program that uses the Direct Connect and ADC protocol
@@ -102,7 +102,7 @@ compatibility with other clients. This is the GTK front end.
 %prep
 %setup -q
 %patch0 -p1 -b .cmake_unset
-#patch1 -p1 -b .qt44
+%patch1 -p1 -b .qt44
 
 
 %build
