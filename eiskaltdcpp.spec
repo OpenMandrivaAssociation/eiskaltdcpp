@@ -12,7 +12,11 @@
 %define with_qt		0
 %endif
 
+%if %mdkversion >= 201100
 %define	with_gtk	1
+%else
+%define with_qt		0
+%endif
 
 
 Name:		eiskaltdcpp
