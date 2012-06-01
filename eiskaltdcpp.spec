@@ -18,7 +18,6 @@
 %define with_gtk	0
 %endif
 
-
 Name:		eiskaltdcpp
 Version:	2.2.7
 Release:	%mkrel 1
@@ -27,40 +26,34 @@ Summary:	Cross-platform program that uses the Direct Connect and ADC protocol
 Url:		http://code.google.com/p/eiskaltdc
 Group:		Networking/File transfer
 Source0:	%{name}-%{version}.tar.bz2
-Patch0:		eiskaltdcpp-cmake-unset.patch
-Patch1:		eiskaltdcpp-qt4.4.patch
+Patch0:		eiskaltdcpp-2.2.7-includes.patch
 
 # Core requirements
 BuildRequires:	boost-devel >= 1.38.0
 BuildRequires:	cmake >= 2.6.3
 BuildRequires:	pcre-devel
 BuildRequires:	openssl-devel >= 0.9.8
-BuildRequires:	pkgconfig
 BuildRequires:	zlib-devel
 BuildRequires:	gettext
 BuildRequires:	idn-devel
-BuildRequires:	liblua5.1-devel
+BuildRequires:	pkgconfig(lua)
 # When enabling miniupnpc in the cmake command line this is needed
 #BuildRequires:	miniupnpc-devel
 
 # Qt requirements
 %if %{with_qt}
 BuildRequires:	aspell-devel
-BuildRequires:	gcc
 # For QT_QML qt4 >= 4.7.0 is needed
 BuildRequires:	qt4-devel >= 4.7.0
 %endif
 # Gtk requirements
 %if %{with_gtk}
-BuildRequires:	libgnome2-devel
+BuildRequires:	pkgconfig(libgnome-2.0)
 BuildRequires:	pango-devel
 BuildRequires:	glib2-devel >= 2.24
-#BuildRequires:	pkgconfig(libgtk)
 BuildRequires:	pkgconfig(libglade-2.0)
-BuildRequires:	libnotify-devel >= 0.4.1
+BuildRequires:	pkgconfig(libnotify)
 %endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}
-
 
 %description
 EiskaltDC++ is a cross-platform program that uses the Direct Connect and
@@ -105,15 +98,10 @@ compatibility with other clients. This is the GTK front end.
 
 %prep
 %setup -q
-#%patch0 -p1 -b .cmake_unset
-#%patch1 -p1 -b .qt44
-
+%patch0 -p1
 
 %build
-%cmake	.. -DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
-	-DLIB_INSTALL_DIR=%{_libdir} \
-	-DLOCAL_BOOST=OFF \
+%cmake	-DLOCAL_BOOST=OFF \
 	-DLUA_SCRIPT=ON \
 	-DUSE_IDNA=ON \
 	-DPERL_REGEX=ON \
@@ -148,12 +136,9 @@ compatibility with other clients. This is the GTK front end.
 
 %make
 
-
 %install
 rm -rf %{buildroot}
-#pushd build
 %makeinstall_std -C build
-#popd
 
 # We don't want install php only for 3 example scripts (in russian moreover),
 # nor we want remove all the example scripts,
@@ -174,18 +159,10 @@ s:.*/\([a-zA-Z]\{2\}\).qm:%lang(\1) \0:' > %{name}-qt.lang
 # and the filelist name is "libeiskaltdcpp.lang"
 %find_lang lib%{name} lib%{name}.lang
 
-
 %clean
 rm -rf %{buildroot}
 
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
-
-
 %files -f lib%{name}.lang
-%defattr(-,root,root)
 %doc AUTHORS COPYING COPYING.DCPP COPYING.OpenSSL LICENSE ChangeLog.txt ChangeLog_ru.txt ChangeLog_uk.txt
 %dir %{_datadir}/%{name}
 %{_libdir}/lib%{name}.so.*
@@ -200,7 +177,6 @@ rm -rf %{buildroot}
 
 %if %{with_qt}
 %files qt -f %{name}-qt.lang
-%defattr(-,root,root)
 %dir %{_datadir}/%{name}/qt
 %dir %{_datadir}/%{name}/qt/ts
 %{_datadir}/%{name}/qt/icons
@@ -214,7 +190,6 @@ rm -rf %{buildroot}
 
 %if %{with_gtk}
 %files gtk -f %{name}-gtk.lang
-%defattr(-,root,root)
 %{_datadir}/%{name}/gtk
 %{_mandir}/man1/%{name}-gtk.1.*
 %{_datadir}/applications/%{name}-gtk.desktop
