@@ -4,18 +4,21 @@
 %define			_enable_debug_packages	%{nil}
 %define			debug_package		%{nil}
 
+%define major 2.2
+%define libname %mklibname %{name} %{major}
+
 # Now QT build requires gcc >= 4.5.0
 # so disable it on 2010.2
-%if %mdkversion >= 201100
-%define	with_qt		1
+%if %{mdvver} >= 201100
+%define with_qt 1
 %else
-%define with_qt		0
+%define with_qt 0
 %endif
 
-%if %mdkversion >= 201100
-%define	with_gtk	1
+%if %{mdvver} >= 201100
+%define with_gtk 1
 %else
-%define with_gtk	0
+%define with_gtk 0
 %endif
 
 Name:		eiskaltdcpp
@@ -63,6 +66,12 @@ with all common DC hub software. The minimum number of our patches to
 original DC++ kernel makes it easy to upgrade to new versions and ensures
 compatibility with other clients.
 
+%package -n %{libname}
+Summary:	Dynamic library used by EiskaltDC++
+Group:		System/Libraries
+
+%description -n %{libname}
+Dynamic library used by EiskaltDC++
 
 %if %{with_qt}
 %package qt
@@ -79,7 +88,6 @@ original DC++ kernel makes it easy to upgrade to new versions and ensures
 compatibility with other clients. This is the Qt front end.
 %endif
 
-
 %if %{with_gtk}
 %package gtk
 Summary:	GTK frontend for EiskaltDC++
@@ -94,7 +102,6 @@ with all common DC hub software. The minimum number of our patches to
 original DC++ kernel makes it easy to upgrade to new versions and ensures
 compatibility with other clients. This is the GTK front end.
 %endif
-
 
 %prep
 %setup -q
@@ -129,8 +136,7 @@ compatibility with other clients. This is the GTK front end.
 	-DWITH_DEV_FILES=OFF \
 	-DUSE_MINIUPNP=OFF \
 	-DLOCAL_MINIUPNP=OFF \
-	-DCREATE_MO=ON \
-	-DLINGUAS="*"
+	-DCREATE_MO=ON
 # TODO: When enabling some of the below, adjust the BReqs accordingly
 #-DUSE_MINIUPNP: library not available in Mandriva yet; to enable it: ON to USE_MINIUPNP, OFF to LOCAL_MINIUPNP
 
@@ -165,23 +171,20 @@ rm -rf %{buildroot}
 %files -f lib%{name}.lang
 %doc AUTHORS COPYING COPYING.DCPP COPYING.OpenSSL LICENSE ChangeLog.txt ChangeLog_ru.txt ChangeLog_uk.txt
 %dir %{_datadir}/%{name}
-%{_libdir}/lib%{name}.so.*
 %{_datadir}/%{name}/update_geoip
 %{_datadir}/%{name}/sounds
 %{_datadir}/%{name}/examples
 %{_datadir}/%{name}/emoticons
-%{_datadir}/%{name}/luascripts/*
+%{_datadir}/%{name}/luascripts
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
+%files -n %{libname}
+%{_libdir}/lib%{name}.so.%{major}*
 
 %if %{with_qt}
 %files qt -f %{name}-qt.lang
-%dir %{_datadir}/%{name}/qt
-%dir %{_datadir}/%{name}/qt/ts
-%{_datadir}/%{name}/qt/icons
-%{_datadir}/%{name}/qt/qtscripts
-%{_datadir}/%{name}/qt/resources
+%{_datadir}/%{name}/qt
 %{_mandir}/man1/%{name}-qt.1.*
 %{_datadir}/applications/%{name}-qt.desktop
 %{_bindir}/%{name}-qt
@@ -195,5 +198,3 @@ rm -rf %{buildroot}
 %{_datadir}/applications/%{name}-gtk.desktop
 %{_bindir}/%{name}-gtk
 %endif
-
-
