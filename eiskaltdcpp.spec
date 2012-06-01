@@ -184,7 +184,11 @@ rm -rf %{buildroot}
 
 %if %{with_qt}
 %files qt -f %{name}-qt.lang
-%{_datadir}/%{name}/qt
+%dir %{_datadir}/%{name}/qt
+%dir %{_datadir}/%{name}/qt/ts
+%{_datadir}/%{name}/qt/icons
+%{_datadir}/%{name}/qt/qtscripts
+%{_datadir}/%{name}/qt/resources
 %{_mandir}/man1/%{name}-qt.1.*
 %{_datadir}/applications/%{name}-qt.desktop
 %{_bindir}/%{name}-qt
