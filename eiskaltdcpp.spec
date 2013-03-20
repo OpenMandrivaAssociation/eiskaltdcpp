@@ -24,7 +24,7 @@
 
 Name:		eiskaltdcpp
 Version:		2.2.7
-Release:		2
+Release:		3
 License:		GPLv3+
 Summary:		Cross-platform program that uses the Direct Connect and ADC protocol
 Url:		http://code.google.com/p/eiskaltdc
@@ -44,7 +44,7 @@ BuildRequires:	attr-devel
 BuildRequires:	idn-devel
 BuildRequires:	pkgconfig(lua)
 # When enabling miniupnpc in the cmake command line this is needed
-#BuildRequires:	miniupnpc-devel
+BuildRequires:	miniupnpc-devel
 
 %if %{with_daemon}
 # Requirements for eiskaltdcpp deamon
@@ -203,11 +203,9 @@ library.
 	-DWITH_EXAMPLES=ON \
 	-DWITH_LUASCRIPTS=ON \
 	-DWITH_DHT=ON \
-	-DUSE_MINIUPNP=OFF \
+	-DUSE_MINIUPNP=ON \
 	-DLOCAL_MINIUPNP=OFF \
 	-DCREATE_MO=ON
-# TODO: When enabling some of the below, adjust the BReqs accordingly
-#-DUSE_MINIUPNP: library not available in Mandriva yet; to enable it: ON to USE_MINIUPNP, OFF to LOCAL_MINIUPNP
 
 %make
 
