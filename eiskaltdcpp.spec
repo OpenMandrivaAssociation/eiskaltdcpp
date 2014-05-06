@@ -62,8 +62,8 @@ BuildRequires:	qt4-devel >= 4.7.0
 %if %{with_gtk}
 BuildRequires:	pkgconfig(libgnome-2.0)
 BuildRequires:	pango-devel
-BuildRequires:	glib2-devel >= 2.24
-BuildRequires:	gtk2-devel >= 2.24
+BuildRequires:	pkgconfig(glib-2.0) >= 2.24
+BuildRequires:	pkgconfig(gtk+-2.0) >= 2.24
 BuildRequires:	libcanberra-devel
 BuildRequires:	pkgconfig(libglade-2.0)
 BuildRequires:	pkgconfig(libnotify)
