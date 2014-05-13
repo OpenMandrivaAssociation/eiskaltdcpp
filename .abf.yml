@@ -1,2 +1,4 @@
+removed_sources:
+  eiskaltdcpp-2.2.7.tar.bz2: f944b0d082fc064b29b4d6c9255654f9ed3b41a2
 sources:
-  "eiskaltdcpp-2.2.7.tar.bz2": f944b0d082fc064b29b4d6c9255654f9ed3b41a2
+  eiskaltdcpp-2.2.9.tar.xz: 2563a6280c2fff969f10261817987406c42a9d03

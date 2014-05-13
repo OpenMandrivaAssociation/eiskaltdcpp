@@ -23,15 +23,13 @@
 %define	with_devel	1
 
 Name:		eiskaltdcpp
-Version:		2.2.7
-Release:		4
+Version:		2.2.9
+Release:		1
 License:		GPLv3+
 Summary:		Cross-platform program that uses the Direct Connect and ADC protocol
 Url:		http://code.google.com/p/eiskaltdc
 Group:		Networking/File transfer
-Source0:		%{name}-%{version}.tar.bz2
-Patch0:		eiskaltdcpp-2.2.7-includes.patch
-Patch1:		eiskaltdcpp-2.2.7-linkage.patch
+Source0:		%{name}-%{version}.tar.xz
 
 # Core requirements
 BuildRequires:	boost-devel >= 1.42.0
@@ -60,12 +58,11 @@ BuildRequires:	qt4-devel >= 4.7.0
 %endif
 # Gtk requirements
 %if %{with_gtk}
-BuildRequires:	pkgconfig(libgnome-2.0)
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig(glib-2.0) >= 2.24
-BuildRequires:	pkgconfig(gtk+-2.0) >= 2.24
+BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	libcanberra-devel
-BuildRequires:	pkgconfig(libglade-2.0)
+BuildRequires:	pkgconfig(libcanberra-gtk)
 BuildRequires:	pkgconfig(libnotify)
 %endif
 
@@ -151,8 +148,9 @@ library.
 
 %prep
 %setup -q
-%patch0 -p1 -b .includes
-%patch1 -p1 -b .linkage
+
+# enable the lua 5.2 support
+perl -p -i -e 's/Lua51/Lua52/' CMakeLists.txt
 
 %build
 %cmake	-DCMAKE_BUILD_TYPE=Release \
@@ -174,9 +172,9 @@ library.
 	-DUSE_QT=OFF \
 %endif
 %if %{with_gtk}
-	-DUSE_GTK=ON \
-	-DUSE_GTK3=OFF \
-	-DUSE_LIBGNOME2=ON \
+	-DUSE_GTK=OFF \
+	-DUSE_GTK3=ON \
+	-DUSE_LIBCANBERRA=ON \
 	-DUSE_LIBNOTIFY=ON \
 %endif
 %if %{with_daemon}
@@ -234,7 +232,7 @@ s:.*/\([a-zA-Z]\{2\}\).qm:%lang(\1) \0:' > %{name}-qt.lang
 
 
 %files -f lib%{name}.lang
-%doc AUTHORS COPYING COPYING.DCPP COPYING.OpenSSL LICENSE ChangeLog.txt ChangeLog_ru.txt ChangeLog_uk.txt
+%doc AUTHORS COPYING LICENSE ChangeLog.txt ChangeLog_ru.txt ChangeLog_uk.txt
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/update_geoip
 %{_datadir}/%{name}/sounds
