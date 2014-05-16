@@ -130,6 +130,7 @@ Group:		Networking/File transfer
 Requires:	%{name} = %{EVRD}
 Requires:	%{libname} = %{EVRD}
 Requires:	perl(Term::UI)
+Requires:	perl(Term::ShellUI)
 
 %description daemon
 EiskaltDC++ is a cross-platform program that uses the Direct Connect and
