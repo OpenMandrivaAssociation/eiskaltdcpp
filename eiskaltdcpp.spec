@@ -24,7 +24,7 @@
 
 Name:		eiskaltdcpp
 Version:		2.2.9
-Release:		1
+Release:		2
 License:		GPLv3+
 Summary:		Cross-platform program that uses the Direct Connect and ADC protocol
 Url:		http://code.google.com/p/eiskaltdc
