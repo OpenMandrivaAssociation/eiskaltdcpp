@@ -27,7 +27,7 @@ Version:		2.2.9
 Release:		2
 License:		GPLv3+
 Summary:		Cross-platform program that uses the Direct Connect and ADC protocol
-Url:		http://code.google.com/p/eiskaltdc
+Url:		https://code.google.com/p/eiskaltdc
 Group:		Networking/File transfer
 Source0:		%{name}-%{version}.tar.xz
 
